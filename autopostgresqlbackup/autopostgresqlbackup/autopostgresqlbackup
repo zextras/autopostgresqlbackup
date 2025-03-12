@@ -1,0 +1,19 @@
+/var/log/carbonio/autopostgresqlbackup.log {
+    daily
+    missingok
+    notifempty
+    dateext
+    endscript
+    compress
+    rotate 30
+}
+
+/var/log/carbonio/autopostgresqlbackup.report {
+    daily
+    missingok
+    notifempty
+    dateext
+    endscript
+    compress
+    rotate 30
+}

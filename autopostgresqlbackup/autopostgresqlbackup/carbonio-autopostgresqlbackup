@@ -29,6 +29,9 @@ VERSION="2.4"                       # Version Number
 DATE="$(date '+%Y-%m-%d_%Hh%Mm')"   # Datestamp e.g 2002-09-21
 DNOW="$(date '+%u')"                # Day number of the week 1 to 7 where 1 represents Monday
 DNOM="$(date '+%d')"                # Date of the Month e.g. 27
+LOG_DIR="/var/log/carbonio"         # Log directory
+LOG_FILE="${LOG_DIR}/autopostgresqlbackup.log"          #Log file
+LOG_REPORT="${LOG_DIR}/autopostgresqlbackup.report"     #Report file
 # }}}
 
 # {{{ Variables
@@ -664,38 +667,22 @@ dump() {
 setup() {
     # Using a shared memory filesystem (if available) to avoid
     # issues when there is no left space on backup storage
-    if [ -w "/dev/shm" ]; then
-        LOG_DIR="/dev/shm"
+    if [ ! -e "${BACKUPDIR}" ]; then
+        mkdir -p "${BACKUPDIR}"
     fi
-
-    LOG_PREFIX="${LOG_DIR}/${NAME}_${DBHOST//\//_}-$(date '+%Y-%m-%d_%Hh%Mm')"
-    LOG_FILE="${LOG_PREFIX}.log"
-    LOG_REPORT="${LOG_PREFIX}.report"
+    if [ ! -e "${BACKUPDIR}/daily" ]; then
+        mkdir -p "${BACKUPDIR}/daily"
+    fi
+    if [ ! -e "${BACKUPDIR}/weekly" ]; then
+        mkdir -p "${BACKUPDIR}/weekly"
+    fi
+    if [ ! -e "${BACKUPDIR}/monthly" ]; then
+        mkdir -p "${BACKUPDIR}/monthly"
+    fi
 
     HOST="${DBHOST}:${DBPORT}"
     if [ "${DBHOST}" = "localhost" ]; then
         HOST="${HOSTNAME}:${DBPORT} (socket)"
-    fi
-}
-# }}}
-
-# {{{ prepare_backupdir()
-prepare_backupdir() {
-    # Create required directories
-    if [ ! -e "${BACKUPDIR}" ]; then         # Check Backup Directory exists.
-        mkdir -p "${BACKUPDIR}"
-    fi
-
-    if [ ! -e "${BACKUPDIR}/daily" ]; then   # Check Daily Directory exists.
-        mkdir -p "${BACKUPDIR}/daily"
-    fi
-
-    if [ ! -e "${BACKUPDIR}/weekly" ]; then  # Check Weekly Directory exists.
-        mkdir -p "${BACKUPDIR}/weekly"
-    fi
-
-    if [ ! -e "${BACKUPDIR}/monthly" ]; then # Check Monthly Directory exists.
-        mkdir -p "${BACKUPDIR}/monthly"
     fi
 }
 # }}}
@@ -708,7 +695,7 @@ cleanup() {
     fi
 
     # Clean up log files
-    rm -f "${LOG_FILE}" "${LOG_REPORT}"
+    # rm -f "${LOG_FILE}" "${LOG_REPORT}"
 }
 # }}}
 
@@ -834,7 +821,7 @@ if [ -f "${CONFIG_COMPAT}" ]; then
     log_debug "Loading config '${CONFIG_COMPAT}' (for backward compatibility)"
     # shellcheck source=/dev/null
     . "${CONFIG_COMPAT}"
-    setup
+    # setup
 elif [ "${CONFIG_N}" -gt 0 ]; then
     CMD="$(readlink -f "${0}")"
     CMD_ARGS=()
@@ -853,18 +840,18 @@ elif [ -f "${CONFIG}" ]; then
     log_debug "Loading config '${CONFIG}'"
     # shellcheck source=/dev/null
     . "${CONFIG}"
-    setup
+    # setup
 else
-    log_error "${NAME}: config file or directory '${CONFIG}' does not exists or directory '${CONFIG}' does not contains any configuration files."
+    log_warn "No config file found, using default settings."
     reporting
-    cleanup_io
-    cleanup
-    exit 1
+    # cleanup_io
+    # cleanup
+    # exit 1
 fi
 # }}}
 
 # {{{ Create backup directories
-prepare_backupdir
+setup
 # }}}
 
 # {{{ PreBackup

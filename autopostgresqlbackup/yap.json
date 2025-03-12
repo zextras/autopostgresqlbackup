@@ -1,0 +1,11 @@
+{
+  "name": "Autopostgresqlbackup",
+  "Description": "Autopostgresqlbackup tool",
+  "buildDir": "/tmp/",
+  "output": "artifacts",
+  "Projects": [
+      {
+          "name": "autopostgresqlbackup"
+      }
+  ]
+}

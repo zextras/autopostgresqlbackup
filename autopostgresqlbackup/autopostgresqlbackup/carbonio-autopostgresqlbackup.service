@@ -1,0 +1,13 @@
+[Unit]
+Description=autopostgresqlbackup daily service
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/carbonio-autopostgresqlbackup -c /etc/autodbbackup.d/carbonio-autopostgresqlbackup.conf
+User=postgres
+Group=postgres
+ProtectHome=true
+ProtectSystem=full
+PrivateTmp=true
