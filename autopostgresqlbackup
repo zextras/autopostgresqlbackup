@@ -810,7 +810,7 @@ setup_io
 # }}}
 
 # {{{ Setup runtime settings
-setup
+#setup
 # }}}
 
 # {{{ Config file loading
