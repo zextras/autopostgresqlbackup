@@ -29,9 +29,6 @@ VERSION="2.5"                       # Version Number
 DATE="$(date '+%Y-%m-%d_%Hh%Mm')"   # Datestamp e.g 2002-09-21
 DNOW="$(date '+%u')"                # Day number of the week 1 to 7 where 1 represents Monday
 DNOM="$(date '+%d')"                # Date of the Month e.g. 27
-LOG_DIR="/var/log/carbonio"         # Log directory
-LOG_FILE="${LOG_DIR}/autopostgresqlbackup.log"          #Log file
-LOG_REPORT="${LOG_DIR}/autopostgresqlbackup.report"     #Report file
 # }}}
 
 # {{{ Variables
@@ -41,6 +38,11 @@ CONFIG="/etc/autodbbackup.d"
 
 # Legacy configuration file path (for backward compatibility)
 CONFIG_COMPAT="/etc/default/autopostgresqlbackup"
+
+#Log directory and files
+LOG_DIR=""
+LOG_FILE=""        
+LOG_REPORT=""
 
 # Email Address to send errors to. If empty errors are displayed on stdout.
 MAILADDR="root"
