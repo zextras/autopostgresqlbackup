@@ -1,7 +1,0 @@
-d /opt/autodbbackup 0750 postgres postgres -
-Z /opt/autodbbackup - postgres postgres -
-d /etc/autodbbackup.d 0750 postgres postgres -
-Z /etc/autodbbackup.d - postgres postgres -
-z /usr/sbin/carbonio-autopostgresqlbackup - postgres postgres -
-z /var/log/carbonio/autopostgresqlbackup.log - postgres postgres -
-z /var/log/carbonio/autopostgresqlbackup.report - postgres postgres -
