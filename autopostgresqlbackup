@@ -805,14 +805,6 @@ while getopts "hdc:" OPTION ; do
 done
 # }}}
 
-# {{{ I/O redirection(s) for logging
-setup_io
-# }}}
-
-# {{{ Setup runtime settings
-#setup
-# }}}
-
 # {{{ Config file loading
 CONFIG_N=0
 if [ -d "${CONFIG}" ]; then
@@ -820,9 +812,9 @@ if [ -d "${CONFIG}" ]; then
 fi
 
 if [ -f "${CONFIG_COMPAT}" ]; then
-    log_debug "Loading config '${CONFIG_COMPAT}' (for backward compatibility)"
     # shellcheck source=/dev/null
     . "${CONFIG_COMPAT}"
+    log_debug "Loading config '${CONFIG_COMPAT}' (for backward compatibility)"
     # setup
 elif [ "${CONFIG_N}" -gt 0 ]; then
     CMD="$(readlink -f "${0}")"
@@ -839,9 +831,9 @@ elif [ "${CONFIG_N}" -gt 0 ]; then
         xargs -0 -L1 "${CMD}" "${CMD_ARGS[@]}" -c
     exit $?
 elif [ -f "${CONFIG}" ]; then
-    log_debug "Loading config '${CONFIG}'"
     # shellcheck source=/dev/null
     . "${CONFIG}"
+    log_debug "Loading config '${CONFIG}'"
     # setup
 else
     log_warn "No config file found, using default settings."
@@ -852,7 +844,11 @@ else
 fi
 # }}}
 
-# {{{ Create backup directories
+# {{{ I/O redirection(s) for logging
+setup_io
+# }}}
+
+# {{{ Setup runtime settings
 setup
 # }}}
 
